@@ -1,0 +1,62 @@
+{
+  "agent": {
+    "run_as_user": "root"
+  },
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/opt/{{ app_name }}/error.log",
+            "log_group_name": "{{ app_name }}-app-logs",
+            "log_stream_name": "{{ app_name }}-php-error-{instance_id}",
+            "timezone": "UTC"
+          },
+          {
+            "file_path": "/var/log/httpd/error_log",
+            "log_group_name": "{{ app_name }}-app-logs",
+            "log_stream_name": "{{ app_name }}-apache-error-{instance_id}",
+            "timezone": "UTC"
+          }
+        ]
+      }
+    }
+  },
+  "metrics": {
+    "append_dimensions": {
+      "InstanceId": "${aws:InstanceId}"
+    },
+    "metrics_collected": {
+      "cpu": {
+        "measurement": [
+          "cpu_usage_idle",
+          "cpu_usage_iowait",
+          "cpu_usage_user",
+          "cpu_usage_system"
+        ],
+        "metrics_collection_interval": 60
+      },
+      "disk": {
+        "measurement": [
+          "disk_used_percent",
+          "disk_free"
+        ],
+        "metrics_collection_interval": 60
+      },
+      "mem": {
+        "measurement": [
+          "mem_used_percent",
+          "mem_available"
+        ],
+        "metrics_collection_interval": 60
+      },
+      "docker": {
+        "measurement": [
+          "cpu_usage_total",
+          "memory_usage"
+        ],
+        "metrics_collection_interval": 60
+      }
+    }
+  }
+}
