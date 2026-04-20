@@ -1,8 +1,8 @@
 <?php
-	$dbServerName = "localhost";
-	$dbUserName = "root";
-	$dbPassword ="";
-	$dbName = "bb_store";
+	$dbServerName = "db";
+	$dbUserName = "myappuser";
+	$dbPassword ="myapppassword";
+	$dbName = "myappdb";
 
 	$con = mysqli_connect($dbServerName,$dbUserName,$dbPassword,$dbName);
 
