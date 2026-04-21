@@ -5,8 +5,6 @@ services:
     restart: unless-stopped
     ports:
       - "80"
-    volumes:
-      - .:/var/www/html:ro
     depends_on:
       db:
         condition: service_healthy
