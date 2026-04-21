@@ -2,7 +2,7 @@
   git:
     repo: "{{ git_repo }}"
     dest: /opt/{{ app_name }}
-    version: { ? { git_branch } }
+    version: "{{  git_branch  }}"
     force: yes
     update: yes
   become: true
