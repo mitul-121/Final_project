@@ -12,8 +12,6 @@
     src: .env.j2
     dest: /opt/{{ app_name }}/.env
     mode: '0600'
-    owner: root
-    group: root
   become: true
 
 - name: Deploy docker-compose.yml from template
@@ -24,10 +22,12 @@
   become: true
 
 - name: Start application with Docker Compose
-  command: docker-compose -f /opt/{{ app_name }}/docker-compose.yml up -d ----build
+  command: docker-compose -f /opt/{{ app_name }}/docker-compose.yml up -d --build --force-recreate
   args:
     chdir: /opt/{{ app_name }}
   become: true
+  environment:
+    DOCKER_BUILDKIT: "0"
 
 - name: wait for app to be healthy
   wait_for:
