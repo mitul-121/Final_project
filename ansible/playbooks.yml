@@ -4,9 +4,9 @@
   become: true
 
   roles:
-  - app
-  - docker
   - common
+  - docker
+  - app
   - monitoring # ← Added here
 
   post_tasks:

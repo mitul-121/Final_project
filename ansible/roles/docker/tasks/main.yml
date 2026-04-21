@@ -1,5 +1,5 @@
 - name: install docker
-  apt:
+  dnf:
     name: docker
     state: present
   become: true
@@ -25,12 +25,5 @@
     append: yes
   become: true
 
-- name: Reboot if needed for docker group changes
-  reboot:
-    msg: "Rebooting to apply docker group changes"
-    connect_timeout: 5
-    reboot_timeout: 600
-    pre_reboot_delay: 0
-    post_reboot_delay: 30
-    test_command: "docker ps"
-  when: "'docker' in ansible_facts['groups']['docker'] and ansible_facts['user'] == 'ec2-user'"
+- name: Reconnect to server to apply docker group membership
+  meta: reset_connection

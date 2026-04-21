@@ -7,7 +7,7 @@
 - name: install common dependencies
   yum:
     name:
-    - curl
+    - curl-minimal
     - git
     - python3-pip
     - unzip
