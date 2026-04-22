@@ -14,8 +14,7 @@
     debug:
       msg: |
         Dee Store has been deployed securely!
-        🌐 Application URL     : http://{{ inventory_hostname }}
-        📊 phpMyAdmin          : http://{{ inventory_hostname }}:8081
-        🔐 Secrets             : Managed via Ansible Vault
-        📈 Monitoring & Logs   : AWS CloudWatch + CloudWatch Logs enabled
-        📝 Log Group           : {{ app_name }}-app-logs
+         Application URL     : http://{{ inventory_hostname }}
+         Secrets             : Managed via Ansible Vault
+         Monitoring & Logs   : AWS CloudWatch + CloudWatch Logs enabled
+         Log Group           : {{ app_name }}-app-logs
