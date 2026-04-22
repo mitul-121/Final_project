@@ -1,7 +1,7 @@
 
 services:
   app:
-    image: ${{ secrets.DOCKERHUB_USERNAME }}/dee-store:latest
+    image: ${{ secrets.DOCKER_USERNAME }}/dee-store:latest
     container_name: dee-store-app
     restart: unless-stopped
     ports:
