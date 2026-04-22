@@ -2,7 +2,7 @@ name: Build and push to docker hub
 
 on:
     push:
-        branches: [ ansible1 ]
+        branches: [ main ]
 
 jobs:
     build:
