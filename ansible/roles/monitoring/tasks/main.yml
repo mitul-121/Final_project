@@ -47,4 +47,4 @@
     name: docker
     state: restarted
   become: true
-  when: false # Change to true if you want to enable awslogs driver
+  when: false
