@@ -21,13 +21,26 @@
     mode: '0644'
   become: true
 
-- name: Start application with Docker Compose
-  command: docker-compose -f /opt/{{ app_name }}/docker-compose.yml up -d --build --force-recreate
+- name: Deploy nginx.conf
+  template:
+    src: nginx.conf.j2
+    dest: /opt/{{ app_name }}/nginx.conf
+    mode: '0644'
+  become: true
+
+- name: Pull latest Docker image from Docker Hub
+  command: docker pull {{ docker_image }}
+  become: true
+  environment:
+    docker_image: "{{ docker_image | default('mitul121/dee-store:latest') }}"
+
+- name: Start application with pulled image from Docker Hub
+  command: docker compose -f /opt/{{ app_name }}/docker-compose.yml up -d
   args:
     chdir: /opt/{{ app_name }}
   become: true
   environment:
-    DOCKER_BUILDKIT: "0"
+    docker_image: "{{ docker_image | default('mitul121/dee-store:latest') }}"
 
 - name: wait for app to be healthy
   uri:
