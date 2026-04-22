@@ -33,7 +33,7 @@ jobs:
               run: |
                   ansible-playbook ansible/playbooks/deploy.yml \
                   --inventory ansible/inventory.ini \
-                  --vault-password-file vault_pass.txt
+                  --vault-password-file vault_pass1.txt
 
             - name: Cleanup
               if: always()
