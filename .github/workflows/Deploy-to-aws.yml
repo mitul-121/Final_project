@@ -27,9 +27,9 @@ jobs:
 
             - name: Run Ansible Deployment
               run: |
-                  ansible-playbook ansible/playbooks.yml \
-                  --inventory ansible/inventory.ini \
-                  --vault-password-file vault_pass.txt
+                  ANSIBLE_CONFIG=ansible.cfg ansible-playbook ansible/playbooks.yml \
+                    -i ansible/inventory.ini \
+                    --vault-password-file vault_pass.txt
 
             - name: Cleanup
               if: always()
