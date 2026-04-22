@@ -33,7 +33,7 @@
   become: true
 
 - name: Start application with pulled image from Docker Hub
-  command: docker compose -f /opt/{{ app_name }}/docker-compose.yml up -d
+  command: docker-compose -f /opt/{{ app_name }}/docker-compose.yml up -d
   args:
     chdir: /opt/{{ app_name }}
   become: true
