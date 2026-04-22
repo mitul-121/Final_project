@@ -29,18 +29,14 @@
   become: true
 
 - name: Pull latest Docker image from Docker Hub
-  command: docker pull {{ docker_image }}
+  command: docker pull {{ docker_image | default('mitul121/dee-store:latest') }}
   become: true
-  environment:
-    docker_image: "{{ docker_image | default('mitul121/dee-store:latest') }}"
 
 - name: Start application with pulled image from Docker Hub
   command: docker compose -f /opt/{{ app_name }}/docker-compose.yml up -d
   args:
     chdir: /opt/{{ app_name }}
   become: true
-  environment:
-    docker_image: "{{ docker_image | default('mitul121/dee-store:latest') }}"
 
 - name: wait for app to be healthy
   uri:
