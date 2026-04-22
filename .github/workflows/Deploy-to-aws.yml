@@ -27,7 +27,7 @@ jobs:
 
             - name: Run Ansible Deployment
               run: |
-                  ansible-playbook ansible/playbooks/deploy.yml \
+                  ansible-playbook ansible/playbooks.yml \
                   --inventory ansible/inventory.ini \
                   --vault-password-file vault_pass1.txt
 
