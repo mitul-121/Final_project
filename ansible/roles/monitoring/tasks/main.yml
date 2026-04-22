@@ -41,7 +41,6 @@
     dest: /etc/docker/daemon.json
     mode: '0644'
   become: true
-  notify: Restart Docker
 
 - name: Restart Docker to apply logging driver
   systemd:
