@@ -27,7 +27,7 @@ jobs:
 
             - name: Run Ansible Deployment
               run: |
-                  ANSIBLE_CONFIG=ansible.cfg ansible-playbook ansible/playbooks.yml \
+                  ANSIBLE_CONFIG=ansible/ansible.cfg ansible-playbook ansible/playbooks.yml \
                     -i ansible/inventory.ini \
                     --vault-password-file vault_pass.txt
 
