@@ -6,6 +6,7 @@ git_branch: main
 mysql_database: myappdb
 mysql_user: myappuser
 admin_username: myappuser
+dee_store_db: dee-store-db
 
 # These sensitive values come from secrets.yml (Ansible Vault)
 mysql_root_password: "{{ vault_mysql_root_password }}"
