@@ -2,7 +2,7 @@ name: Deploy dee store to AWS
 
 on:
     workflow_run:
-        workflows: [ " Build and push to docker hub" ]
+        workflows: [ "Build and push to docker hub" ]
         types:
             - completed
         branches: [ main ]
@@ -10,6 +10,7 @@ on:
 jobs:
     deploy:
         runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
         steps:
             - name: Checkout code
