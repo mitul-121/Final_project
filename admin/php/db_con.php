@@ -1,8 +1,8 @@
 <?php
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "bb_store";
+    $servername = "dee-store-db";
+    $username = "myappuser";
+    $password = "StrongAdminPass2026!";
+    $dbname = "myappdb";
     
     try {
       $conn = new PDO("mysql:host=$servername; dbname=$dbname", $username, $password);

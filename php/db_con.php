@@ -1,7 +1,7 @@
 <?php
-    $servername = "db";
+    $servername = "dee-store-db";
     $username = "myappuser";
-    $password = "myapppassword";
+    $password = "StrongDbPassword2026!";
     $dbname = "myappdb";
     $port = 3306;  
 
