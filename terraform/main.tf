@@ -1,24 +1,22 @@
 resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
   enable_dns_support   = true
-  tags = {
-    Name = "dee-store-vpc"
-  }
+
+  tags = { Name = "dee-store-vpc" }
+}
+
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.main.id
+  tags   = { Name = "dee-store-igw" }
 }
 
 resource "aws_subnet" "public" {
-  vpc_id = aws_vpc.main.id
-  cidr_block = "10.0.1.0/24"
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
-}
 
-resource "aws_internet_gateway" "gw" {
-  vpc_id = aws_vpc.main.id
-
-  tags = {
-    Name = "dee-store-igw"
-  }
+  tags = { Name = "dee-store-public-subnet" }
 }
 
 resource "aws_route_table" "public" {
@@ -26,12 +24,10 @@ resource "aws_route_table" "public" {
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.gw.id
+    gateway_id = aws_internet_gateway.igw.id
   }
 
-  tags = {
-    Name = "dee-store-public-rt"
-  }
+  tags = { Name = "dee-store-public-rt" }
 }
 
 resource "aws_route_table_association" "public" {
@@ -39,27 +35,78 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-resource "aws_subnet" "private1" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.2.0/24"
-  availability_zone = "eu-central-1a"
+# ==================== Security Group ====================
 
-  tags = {
-    Name = "private-subnet-1"
+resource "aws_security_group" "ec2_sg" {
+  name        = "dee-store-sg1"
+  vpc_id      = aws_vpc.main.id
+  description = "Security group for Dee Store"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 8081
+    to_port     = 8081
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = { Name = "dee-store-sg" }
 }
 
-resource "aws_subnet" "private2" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.3.0/24"
-  availability_zone = "eu-central-1b"
+# ==================== IAM Role for CloudWatch ====================
 
-  tags = {
-    Name = "private-subnet-2"
-  }
+resource "aws_iam_role" "cloudwatch_agent" {
+  name = "dee-store-cloudwatch-agent-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = { Service = "ec2.amazonaws.com" }
+    }]
+  })
 }
 
-resource "aws_instance" "app" {
+resource "aws_iam_role_policy_attachment" "cloudwatch_policy" {
+  role       = aws_iam_role.cloudwatch_agent.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
+
+resource "aws_iam_instance_profile" "cloudwatch" {
+  name = "dee-store-cloudwatch-profile"
+  role = aws_iam_role.cloudwatch_agent.name
+}
+
+# ==================== EC2 Instance ====================
+resource "aws_instance" "dee_store" {
   ami = "ami-0c42fad2ea005202d"
   instance_type = "t3.micro"
   subnet_id = aws_subnet.public.id
@@ -79,74 +126,58 @@ resource "aws_instance" "app" {
                 EOF
 
   tags = {
-    Name = "dee-store-app-server"
+    Name = "dee-store-app"
   }  
 }
+# ==================== CloudWatch Logs ====================
 
-resource "aws_security_group" "ec2_sg" {
-  vpc_id = aws_vpc.main.id
-
-  ingress  {
-    from_port = 80
-    to_port = 80
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  
-  ingress {
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port = 8080
-    to_port = 8080
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port = 8081
-    to_port = 8081
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-resource "aws_db_subnet_group" "default" {
-  name       = "main-db-subnet-group"
-  subnet_ids = [aws_subnet.private1.id, aws_subnet.private2.id]
+resource "aws_cloudwatch_log_group" "app_logs" {
+  name              = "/dee-store/app-logs"
+  retention_in_days = 30
 
   tags = {
-    Name = "Main DB subnet group"
+    Name        = "dee-store-app-logs"
+    Environment = "production"
   }
 }
 
+resource "aws_cloudwatch_log_group" "nginx_logs" {
+  name              = "/dee-store/nginx-logs"
+  retention_in_days = 14
 
-resource "aws_db_instance" "db" {
-  allocated_storage = 20
-  engine = "mysql"
-  engine_version = "8.0"
-  instance_class = "db.t3.micro"
-  username = var.db_username
-  password = var.db_password
-  parameter_group_name = "default.mysql8.0"
-  db_subnet_group_name = aws_db_subnet_group.default.name
-  skip_final_snapshot = true
-  publicly_accessible = false
+  tags = { Name = "dee-store-nginx-logs" }
 }
 
-resource "aws_ecr_repository" "dee_store" {
-  name = "dee-store"  
+# ==================== CloudWatch Alarms ====================
+
+resource "aws_cloudwatch_metric_alarm" "high_cpu" {
+  alarm_name          = "dee-store-high-cpu"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 2
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = 300
+  statistic           = "Average"
+  threshold           = 80
+  alarm_description   = "High CPU Usage on Dee Store Server"
+
+  dimensions = {
+    InstanceId = aws_instance.dee_store.id
+  }
 }
 
+resource "aws_cloudwatch_metric_alarm" "high_memory" {
+  alarm_name          = "dee-store-high-memory"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 2
+  metric_name         = "mem_used_percent"
+  namespace           = "CWAgent"
+  period              = 300
+  statistic           = "Average"
+  threshold           = 85
+  alarm_description   = "High Memory Usage on Dee Store Server"
 
+  dimensions = {
+    InstanceId = aws_instance.dee_store.id
+  }
+}
