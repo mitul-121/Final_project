@@ -1,4 +1,4 @@
-﻿<?php
+<?php
     include_once 'php/sessions.php';
     if(!isset($_SESSION['admin'])){
         header("Location: login.php"); 

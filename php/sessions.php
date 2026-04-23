@@ -12,4 +12,3 @@
             unset($_SESSION['user_start']);
         }
     }
-?>
