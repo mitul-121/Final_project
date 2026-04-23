@@ -1,0 +1,36 @@
+name: Deploy dee store to AWS
+
+on:
+    push:
+        branches: [ ansible1 ]
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup SSH
+              uses: webfactory/ssh-agent@v0.9.0
+              with:
+                  ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+            - name: Set up Ansible
+              run: pip install ansible
+
+            - name: Decrypt Vault secrets
+              run: |
+                  echo "${{ secrets.ANSIBLE_VAULT_PASSWORD }}" > vault_pass.txt
+                  chmod 600 vault_pass.txt
+
+            - name: Run Ansible Deployment
+              run: |
+                  ANSIBLE_CONFIG=ansible/ansible.cfg ansible-playbook ansible/playbooks.yml \
+                    -i ansible/inventory.ini \
+                    --vault-password-file vault_pass.txt
+
+            - name: Cleanup
+              if: always()
+              run: rm -f vault_pass.txt

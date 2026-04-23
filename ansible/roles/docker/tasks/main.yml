@@ -1,0 +1,29 @@
+- name: install docker
+  dnf:
+    name: docker
+    state: present
+  become: true
+
+- name: Enable and start docker service
+  systemd:
+    name: docker
+    enabled: true
+    state: started
+  become: true
+
+- name: Install Docker Compose
+  get_url:
+    url: https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    mode: '0755'
+  become: true
+
+- name: Add ec2-user to docker group
+  user:
+    name: ec2-user
+    groups: docker
+    append: yes
+  become: true
+
+- name: Reconnect to server to apply docker group membership
+  meta: reset_connection

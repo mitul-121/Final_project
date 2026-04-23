@@ -1,0 +1,19 @@
+---
+- name: Deploy Dee Store to AWS with Secure Vault + Monitoring
+  hosts: webservers
+  become: true
+
+  roles:
+  - common
+  - docker
+  - app
+  - monitoring
+  post_tasks:
+  - name: ✅ Deployment completed successfully
+    debug:
+      msg: |
+        Dee Store has been deployed securely!
+         Application URL     : http://{{ inventory_hostname }}
+         Secrets             : Managed via Ansible Vault
+         Monitoring & Logs   : AWS CloudWatch + CloudWatch Logs enabled
+         Log Group           : {{ app_name }}-app-logs

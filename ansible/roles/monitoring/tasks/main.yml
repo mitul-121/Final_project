@@ -1,0 +1,50 @@
+---
+- name: Install Amazon CloudWatch Agent
+  yum:
+    name: amazon-cloudwatch-agent
+    state: present
+  become: true
+
+- name: Create CloudWatch Agent configuration file
+  file:
+    path: /opt/aws/amazon-cloudwatch-agent/etc
+    state: directory
+    mode: '0755'
+  become: true
+
+- name: Deploy CloudWatch Agent configuration (with Docker logs)
+  template:
+    src: amazon-cloudwatch-agent.json.j2
+    dest: /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+    mode: '0644'
+  become: true
+
+- name: Start and enable CloudWatch Agent service
+  systemd:
+    name: amazon-cloudwatch-agent
+    enabled: yes
+    state: restarted
+    daemon_reload: yes
+  become: true
+
+- name: Configure Docker to send logs to CloudWatch (optional but recommended)
+  copy:
+    content: |
+      {
+        "log-driver": "awslogs",
+        "log-opts": {
+          "awslogs-group": "{{ app_name }}-logs",
+          "awslogs-region": "us-east-1",
+          "awslogs-create-group": "true"
+        }
+      }
+    dest: /etc/docker/daemon.json
+    mode: '0644'
+  become: true
+
+- name: Restart Docker to apply logging driver
+  systemd:
+    name: docker
+    state: restarted
+  become: true
+  when: false

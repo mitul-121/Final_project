@@ -1,0 +1,13 @@
+---
+app_name: dee-store
+git_repo: "https://github.com/mitul-121/Final_project.git"
+git_branch: ansible1
+
+mysql_database: myappdb
+mysql_user: myappuser
+admin_username: myappuser
+
+# These sensitive values come from secrets.yml (Ansible Vault)
+mysql_root_password: "{{ vault_mysql_root_password }}"
+mysql_password: "{{ vault_mysql_password }}"
+admin_password: "{{ vault_admin_password }}"

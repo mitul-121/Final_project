@@ -1,0 +1,20 @@
+- name: update system paclages
+  yum:
+    name: "*"
+    state: latest
+  become: true
+
+- name: install common dependencies
+  yum:
+    name:
+    - curl-minimal
+    - git
+    - python3-pip
+    - unzip
+    state: present
+  become: true
+
+- name: set timezone
+  timezone:
+    name: "UTC"
+  become: true

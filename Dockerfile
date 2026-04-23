@@ -1,9 +1,15 @@
-FROM php:8.2-apache
+FROM php:8.3-apache
 
-RUN docker-php-ext-install pdo pdo_mysql && \
-    apt-get update && apt-get install -y libzip-dev && \
-    docker-php-ext-install zip && \
-    a2enmod rewrite
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    unzip \
+    curl \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo pdo_mysql zip gd mysqli \
+    && a2enmod rewrite
 
 COPY ./ /var/www/html/
 

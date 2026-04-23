@@ -1,0 +1,54 @@
+- name: Clone or pull latest code from Github
+  git:
+    repo: "{{ git_repo }}"
+    dest: /opt/{{ app_name }}
+    version: "{{  git_branch  }}"
+    force: yes
+    update: yes
+  become: true
+
+- name: Create .env file from secure template
+  template:
+    src: .env.j2
+    dest: /opt/{{ app_name }}/.env
+    mode: '0600'
+  become: true
+
+- name: Deploy docker-compose.yml from template
+  template:
+    src: docker-compose.yml.j2
+    dest: /opt/{{ app_name }}/docker-compose.yml
+    mode: '0644'
+  become: true
+
+- name: Deploy nginx.conf
+  template:
+    src: nginx.conf.j2
+    dest: /opt/{{ app_name }}/nginx.conf
+    mode: '0644'
+  become: true
+
+- name: Pull latest Docker image from Docker Hub
+  command: docker pull {{ docker_image | default('mitpip/dee-store:latest') }}
+  become: true
+
+- name: Pull latest Docker image from Docker Hub
+  command: docker pull {{ docker_image | default('mitpip/dee-store-phpmyadmin:latest') }}
+  become: true
+
+- name: Start application with pulled image from Docker Hub
+  command: docker-compose -f /opt/{{ app_name }}/docker-compose.yml up -d
+  args:
+    chdir: /opt/{{ app_name }}
+  become: true
+
+- name: wait for app to be healthy
+  uri:
+    url: "http://localhost:8080"
+    status_code: 200
+    timeout: 10
+    return_content: no
+  register: health_check
+  retries: 5
+  delay: 10
+  until: health_check is succeeded
