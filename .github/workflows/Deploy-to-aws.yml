@@ -1,8 +1,11 @@
 name: Deploy dee store to AWS
 
 on:
-    push:
-        branches: [ ansible1 ]
+    workflow_run:
+        workflows: [ " Build and push to docker hub" ]
+        types:
+            - completed
+        branches: [ main ]
 
 jobs:
     deploy:
