@@ -41,7 +41,7 @@
                         <div class="row h-100 align-items-center">
                             <div class="col-12">
                                 <div class="welcome_slide_text">
-                                    <h6 data-animation="bounceInDown" data-delay="0" data-duration="500ms">* Free shipping for a limited period</h6>
+                                    <h6 data-animation="bounceInDown" data-delay="0" data-duration="500ms">* Free shipping for a period</h6>
                                     <h2 data-animation="fadeInUp" data-delay="500ms" data-duration="500ms">Fashion Trends</h2>
                                     <a href="shop.php?pg=1&cat=2" class="btn karl-btn" data-animation="fadeInUp" data-delay="1s" data-duration="500ms">Shop Now</a>
                                 </div>
