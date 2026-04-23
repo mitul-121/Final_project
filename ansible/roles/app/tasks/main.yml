@@ -33,7 +33,7 @@
   become: true
 
 - name: Pull latest Docker image from Docker Hub
-  command: docker pull {{ docker_image | default('mitpip/dee-store-phpmyadmin:latest') }}
+  command: docker pull {{ docker_image | default('mitpip/dee-store-admin:latest') }}
   become: true
 
 - name: Start application with pulled image from Docker Hub

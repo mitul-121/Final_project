@@ -44,9 +44,9 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
   
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: dee-store-phpmyadmin
+  admin:
+    image: admin/admin:latest
+    container_name: dee-store-admin
     restart: unless-stopped
     ports:
       - "8081:80"

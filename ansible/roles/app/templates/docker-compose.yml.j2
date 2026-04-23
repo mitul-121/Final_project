@@ -42,9 +42,9 @@ services:
     depends_on:
       - app
   
-  phpmyadmin:
-    image: {{ docker_image | default('mitpip/dee-store-phpmyadmin:latest') }}
-    container_name: dee-store-phpmyadmin
+  admin:
+    image: {{ docker_image | default('mitpip/dee-store-admin:latest') }}
+    container_name: dee-store-admin
     restart: unless-stopped
     ports:
       - "8081:80"

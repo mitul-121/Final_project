@@ -21,14 +21,21 @@ jobs:
                   username: ${{ secrets.DOCKER_USERNAME }}
                   password: ${{ secrets.DOCKER_PASSWORD }}
 
-            - name: Build and push Docker image
+            - name: Build and push Main Dee Store
               uses: docker/build-push-action@v5
               with:
                   context: .
+                  file: ./Dockerfile
                   push: true
                   tags: ${{ secrets.DOCKER_USERNAME }}/dee-store:latest
-                  cache-from: type=gha
-                  cache-to: type=gha,mode=max
+
+            - name: Build and push Dee Store Admin
+              uses: docker/build-push-action@v5
+              with:
+                  context: .
+                  file: .admin/Dockerfile
+                  push: true
+                  tags: ${{ secrets.DOCKER_USERNAME }}/dee-store-admin:latest
 
             - name: Notify success
               if: success()

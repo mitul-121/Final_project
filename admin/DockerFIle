@@ -1,0 +1,32 @@
+FROM php:8.3-apache
+
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    unzip \
+    curl \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo pdo_mysql zip gd mysqli \
+    && a2enmod rewrite \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY ./admin /var/www/html/admin
+
+COPY ./css /var/www/html/css
+COPY ./img /var/www/html/img
+COPY ./js /var/www/html/js
+
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
+
+
+COPY docker/apache-admin.conf /etc/apache2/sites-available/000-default.conf
+
+EXPOSE 81
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=5 \
+    CMD curl -f http://localhost/admin || exit 1
+
+CMD ["apache2-foreground"]
