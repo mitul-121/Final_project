@@ -1,58 +1,56 @@
+
 services:
   app:
-    build: .
-    container_name: myapp
+    image: mitpip/dee-store
+    container_name: dee-store-app
     restart: unless-stopped
     ports:
-      - "80"
+      - "8080:80"
     depends_on:
       db:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost"]
-      interval: 10s
-      timeout: 5s
+      interval: 30s
+      timeout: 10s
       retries: 5
 
   db:
     image: mysql:8.0
-    container_name: myappdb
+    container_name: dee-store-db
     restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    env_file:
+      - .env
     ports:
-      - "3307:3306"
+      - "3309:3308"
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 10
-  
+
   nginx:
-    image: nginx:latest
-    container_name: myapp_nginx
+    image: nginx:alpine
+    container_name: dee-store-nginx
     restart: unless-stopped
     ports:
-      - "8080:80"
-    depends_on:
-      - app
+      - "82:82"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app
   
   admin:
-    image: admin/admin:latest
+    image: mitpip/dee-store-admin
     container_name: dee-store-admin
     restart: unless-stopped
     ports:
-      - "8081:80"
+      - "8081:81"
     env_file: .env
     depends_on:
       - db
-  
+
 volumes:
   db_data:
