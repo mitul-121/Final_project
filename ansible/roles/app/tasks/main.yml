@@ -31,7 +31,7 @@
 - name: Pull latest Docker image from Docker Hub
   command: docker pull {{ docker_image | default('mitpip/dee-store:latest') }}
   become: true
-
+#chanhed
 - name: Pull latest Docker image from Docker Hub
   command: docker pull {{ docker_image | default('mitpip/dee-store-admin:latest') }}
   become: true
