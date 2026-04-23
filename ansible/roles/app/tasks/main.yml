@@ -32,6 +32,10 @@
   command: docker pull {{ docker_image | default('mitpip/dee-store:latest') }}
   become: true
 
+- name: Pull latest Docker image from Docker Hub
+  command: docker pull {{ docker_image | default('mitpip/dee-store-phpmyadmin:latest') }}
+  become: true
+
 - name: Start application with pulled image from Docker Hub
   command: docker-compose -f /opt/{{ app_name }}/docker-compose.yml up -d
   args:
