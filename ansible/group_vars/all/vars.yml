@@ -1,7 +1,7 @@
 ---
 app_name: dee-store
 git_repo: "https://github.com/mitul-121/Final_project.git"
-git_branch: ansible1
+git_branch: main
 
 mysql_database: myappdb
 mysql_user: myappuser
