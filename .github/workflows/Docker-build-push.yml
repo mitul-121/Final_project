@@ -33,7 +33,7 @@ jobs:
               uses: docker/build-push-action@v5
               with:
                   context: .
-                  file: ./DockerFile.admin
+                  file: ./Dockerfile.admin
                   push: true
                   tags: ${{ secrets.DOCKER_USERNAME }}/dee-store-admin:latest
 
