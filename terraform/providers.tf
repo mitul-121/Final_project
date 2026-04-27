@@ -9,10 +9,10 @@ terraform {
       version = "~> 4.0"
     }
   }
-  
+
   backend "s3" {
     bucket = "dee-store-state-bucket"
     key    = "terraform/terraform.tfstate"
-    region = "eu-central-1"    
+    region = "eu-central-1"
   }
 }
