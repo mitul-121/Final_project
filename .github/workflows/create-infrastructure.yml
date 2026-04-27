@@ -81,6 +81,6 @@ jobs:
 
             # Terraform destroy (Only if user chooses destroy)
             - name: Terraform Destroy
-              if: inputs.action == 'Destroy'
-              run: terraform destroy
+              if: inputs.auto_approve == true
+              run: terraform apply -auto-approve destroy.tfplan
               working-directory: terraform
