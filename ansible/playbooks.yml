@@ -7,7 +7,7 @@
   - common
   - docker
   - app
-  - monitoring
+
   post_tasks:
   - name: ✅ Deployment completed successfully
     debug:
