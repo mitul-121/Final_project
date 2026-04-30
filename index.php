@@ -33,6 +33,7 @@
 <body>
       <?php include_once 'php/header.php'; ?>
         <!-- ****** Welcome Slides Area Start ****** -->
+        <hr>
         <section class="welcome_area">
             <div class="welcome_slides owl-carousel">
                 <!-- Single Slide Start -->

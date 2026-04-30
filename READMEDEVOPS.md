@@ -80,3 +80,40 @@ ANSIBLE_CONFIG=ansible/ansible.cfg ansible-playbook ansible/playbooks.yml \
 -i ansible/inventory.ini \
 --vault-password-file vault_pass.txt
 ```
+
+## 📊 Monitoring & Logging
+
+View Logs
+
+AWS Console → CloudWatch → Log groups → Search dee-store
+
+View Metrics
+
+AWS Console → CloudWatch → Metrics → Search CWAgent or your EC2 Instance ID
+
+Alarms
+
+High CPU Usage
+High Memory Usage
+
+## 📁 Project Structure
+
+├── Dockerfile # Main Application
+├── Dockerfile.admin # Admin Panel
+├── docker-compose.yml # Docker services
+├── ansible/ # Ansible playbooks & roles
+├── terraform/ # Infrastructure as Code
+├── .github/workflows/ # GitHub Actions CI/CD
+
+## 🔧 How to Use
+
+Main Website: http://YOUR_EC2_IP
+Admin Panel: http://YOUR_EC2_IP/admin
+phpMyAdmin: http://YOUR_EC2_IP:8081
+
+## 🔐 Security
+
+All secrets stored in GitHub Secrets
+Passwords encrypted with Ansible Vault
+SSH key authentication for EC2
+Never commit .env or private keys
