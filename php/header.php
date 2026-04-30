@@ -51,14 +51,7 @@
 
                         <div class="col-12 col-lg-7">
                             <div class="top_single_area d-flex align-items-center">
-                                <!-- Logo Area -->
-                                <div class="top_logo">
-                                    <a href="#"><img src="img/core-img/logo.png" alt=""></a>
-                                </div>
-                                <hr>
-                                <hr>
-                                <hr>
-                                <hr>
+                              
                                 <!-- Cart & Menu Area -->
                                 <div class="header-cart-menu d-flex align-items-center ml-auto">
                                     <!-- Cart Area -->
