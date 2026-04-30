@@ -1,12 +1,3 @@
-- name: Clone or pull latest code from Github
-  git:
-    repo: "{{ git_repo }}"
-    dest: /opt/{{ app_name }}
-    version: "{{  git_branch  }}"
-    force: yes
-    update: yes
-  become: true
-
 - name: Create .env file from secure template
   template:
     src: .env.j2
@@ -28,12 +19,18 @@
     mode: '0644'
   become: true
 
+- name: Stop current containers
+  command: docker compose -f "{{ app_dir }}/docker-compose.yml" down
+  args:
+    chdir: "dee-store"
+  ignore_errors: true
+
 - name: Pull latest Docker image from Docker Hub
-  command: docker pull {{ docker_image | default('mitpip/dee-store:latest') }}
+  command: docker pull {{ docker_username }}/dee-store:latest
   become: true
 #chanhed
 - name: Pull latest Docker image from Docker Hub
-  command: docker pull {{ docker_image | default('mitpip/dee-store-admin:latest') }}
+  command: docker pull {{ docker_username }}/dee-store-admin:latest
   become: true
 
 - name: Start application with pulled image from Docker Hub
