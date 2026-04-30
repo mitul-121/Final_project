@@ -109,7 +109,6 @@ High Memory Usage
 
 Main Website: http://YOUR_EC2_IP
 Admin Panel: http://YOUR_EC2_IP/admin
-phpMyAdmin: http://YOUR_EC2_IP:8081
 
 ## 🔐 Security
 
