@@ -96,7 +96,7 @@ Alarms
 High CPU Usage
 High Memory Usage
 
-## 📁 Project Structure
+## 📁 Project Structur
 
 ├── Dockerfile # Main Application
 ├── Dockerfile.admin # Admin Panel
